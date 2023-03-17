@@ -1,0 +1,57 @@
+name: Build and push order-recommendation-middleware-api-v2
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  call-build-image:
+    uses: roms-jp/order-recommendation-middleware-api-v2/.github/workflows/_build-image.yml@main
+    with:
+      build-dir: .
+      dockerfile: Dockerfile
+      push-to-ecr: ${{ github.ref == 'refs/heads/main' }}
+      ecr-repository-name: order-recommendation-middleware-api-v2
+  deploy-to-app-runner:
+    permissions:
+      id-token: write
+      contents: read
+
+    needs: call-build-image
+    runs-on: ubuntu-latest
+    steps:      
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::836375047646:role/GitHubActionsOIDC
+          role-session-name: GitHubActions
+          aws-region: ap-northeast-1
+          mask-aws-account-id: 'no'
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Deploy to App Runner Image
+        uses: awslabs/amazon-app-runner-deploy@main
+        id: deploy-apprunner
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        with:
+          service: order-recommendation-middleware-api-v2
+          image: ${{ env.ECR_REGISTRY }}/${{needs.call-build-image.outputs.image-path}}
+          access-role-arn: arn:aws:iam::836375047646:role/service-role/AppRunnerECRAccessRole
+          region: ap-northeast-1
+          port: 8080
+          cpu : 1
+          memory : 2
+          wait-for-service-stability: true

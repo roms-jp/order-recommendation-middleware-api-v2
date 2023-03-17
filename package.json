@@ -1,0 +1,45 @@
+{
+  "name": "order-recommendation-middleware-api",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "order:recommendation:api": "nodemon app.ts",
+    "build": "tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roms-jp/order-recommendation-middleware-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/roms-jp/order-recommendation-middleware-api/issues"
+  },
+  "homepage": "https://github.com/roms-jp/order-recommendation-middleware-api#readme",
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/jwk-to-pem": "^2.0.1",
+    "@types/lodash": "^4.14.184",
+    "@types/node": "^18.7.14",
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.2"
+  },
+  "dependencies": {
+    "amazon-cognito-identity-js": "^5.2.10",
+    "axios": "^0.27.2",
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "date-and-time": "^2.4.1",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "jwk-to-pem": "^2.0.5",
+    "lodash": "^4.17.21",
+    "mysql2": "^2.3.3",
+    "pg-promise": "^10.15.4"
+  }
+}
